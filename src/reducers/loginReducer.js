@@ -9,8 +9,16 @@ export default function loginReducer(state = initialState.identity, action) {
         jwt: action.identity.token,
         usuario: action.identity.usuario,
         expiration: action.identity.expiration,
-      })
+      });
+    case types.VALIDATE_TOKEN_SUCCESS:
+      return Object.assign({}, state, {
+        isAuthenticated: true,
+        jwt: action.identity.token,
+        usuario: action.identity.usuario,
+        expiration: action.identity.expiration,
+      });
     case types.REQUEST_LOGOUT:
+      localStorage.removeItem('jwt');
       return initialState.identity;
     default:
       return state;

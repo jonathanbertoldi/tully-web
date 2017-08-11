@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as snackbarActions from '../actions/snackbarActions';
-import { requestLogout } from '../actions/loginActions';
+import { requestValidateToken, requestLogout } from '../actions/loginActions';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Snackbar, RefreshIndicator } from 'material-ui';
@@ -21,7 +21,7 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div>
-          {identity.isAuthenticated ? <Layout logout={requestLogout} /> : <Login />}
+          {identity.isAuthenticated ? <Layout logout={requestLogout}>{this.props.children}</Layout> : <Login />}
 
           <Snackbar open={snackbar.open}
             message={snackbar.message}
@@ -43,13 +43,14 @@ function mapStateToProps(state, ownProps) {
   const { snackbar, identity } = state;
   return {
     refresh: state.apiRequestsInProgress > 0 ? 'loading' : 'hide',
+    isFetching: state.apiRequestsInProgress > 0 ? true : false,
     identity,
     snackbar,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...snackbarActions, requestLogout };
+  const actions = { ...snackbarActions, requestLogout, requestValidateToken };
 
   return {
     actions: bindActionCreators(actions, dispatch),
