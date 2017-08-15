@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 
 import configureStore from './store/configureStore';
 import { requestValidateToken } from './actions/loginActions';
+import { loadAdmins } from './actions/adminActions';
 
 import routes from './routes';
 
@@ -17,6 +18,7 @@ injectTapEventPlugin();
 
 const store = configureStore();
 store.dispatch(requestValidateToken()).catch(error => browserHistory.push('/'));
+store.dispatch(loadAdmins());
 
 const app = (
   <Provider store={store}>

@@ -10,4 +10,5 @@ export default {
     open: false,
     message: '',
   },
+  admins: [],
 }

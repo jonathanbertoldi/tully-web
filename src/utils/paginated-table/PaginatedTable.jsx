@@ -66,7 +66,9 @@ class PaginatedTable extends Component {
       return (
         <TableRow key={index}>
           {tableContent.map((property, index) => (
-            <TableRowColumn key={index}>{item[property.propertyName]}</TableRowColumn>
+            <TableRowColumn key={index}>
+              {item[property.propertyName]}
+            </TableRowColumn>
           ))}
         </TableRow>
       )
@@ -83,9 +85,18 @@ class PaginatedTable extends Component {
 
   prevPage = () => this.setState({ tableOffset: this.state.tableOffset - this.props.limitPerTablePage, tablePage: this.state.tablePage - 1 })
 
+  handleSelectTableRow = (index) => {
+    if (index.length !== 0) {
+      const { tableOffset } = this.state;
+      const realIndex = parseInt(index, 10) + parseInt(tableOffset, 10);
+
+      this.props.handleSelectedItem(this.props.listItems[realIndex]);
+    }
+  }
+
   render() {
     return (
-      <Table>
+      <Table onRowSelection={this.handleSelectTableRow}>
         {this.renderTableHeader()}
         {this.renderTableBody()}
         {this.renderTableFooter()}
@@ -98,7 +109,8 @@ PaginatedTable.propTypes = {
   listItems: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   limitPerTablePage: PropTypes.number.isRequired,
   noItemsMessage: PropTypes.string.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  handleSelectedItem: PropTypes.func.isRequired,
 }
 
 export default PaginatedTable;

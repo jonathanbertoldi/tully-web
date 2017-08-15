@@ -5,7 +5,9 @@ import App from './components/App';
 import HomePage from './components/home/HomePage';
 import UserPage from './components/users/UserPage';
 import ChallengePage from './components/challenges/ChallengePage';
+
 import AdminPage from './components/admins/AdminPage';
+import CreateAdminPage from './components/admins/CreateAdminPage';
 
 export default (
   <Route path="/" component={App}>
@@ -13,5 +15,6 @@ export default (
     <Route path="usuarios" component={UserPage} />
     <Route path="desafios" component={ChallengePage} />
     <Route path="admins" component={AdminPage} />
+    <Route path="admins/novo" component={CreateAdminPage} />
   </Route>
 );

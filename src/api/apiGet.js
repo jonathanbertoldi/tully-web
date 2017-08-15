@@ -14,7 +14,7 @@ export default (endpoint) => {
   return fetch(url, request)
     .then(response => {
       if (response.ok) {
-        response.json()
+        return response.json()
           .then(json => {
             return Promise.resolve(json);
           });
