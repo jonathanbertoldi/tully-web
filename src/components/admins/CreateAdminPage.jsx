@@ -40,7 +40,7 @@ class CreateAdminPage extends Component {
   validateAdmin = (admin) => {
     const { errors } = this.state;
 
-    Object.keys(admin).forEach((field, index) => {
+    Object.keys(admin).forEach(field => {
       if (admin[field] === '')
         errors[field] = `O campo ${field} é obrigatório`;
     });
@@ -49,15 +49,23 @@ class CreateAdminPage extends Component {
       errors.confirmaSenha = 'A senha não confere com a que foi inserida anteriormente.'
 
     this.setState({ errors });
+
+    let check = 0;
+    Object.keys(errors).forEach(field => {
+      return errors[field] !== '' && check++;
+    });
+
+    return check === 0;
   }
 
   handleAdminSubmit = (e) => {
     e.preventDefault();
-    const { admin, errors } = this.state;
-    this.validateAdmin(admin);
-
-    let adminValid = false;
-    Object.keys(errors).forEach(field => adminValid = error[field] === '')
+    const { admin } = this.state;
+    if (this.validateAdmin(admin)) {
+      console.log('passou');
+    } else {
+      console.log('não passou');
+    }
   }
 
   render() {
