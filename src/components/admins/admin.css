@@ -8,13 +8,13 @@
 .form-group {
   display: flex;
   flex-wrap: wrap;
+  margin: 0 -8px;
 }
 
 .form-group .input-control {
   flex: 1 1 auto;
   display: block;
-  margin-right: 8px;
-  margin-left: 8px;
+  margin: 0 8px;
 }
 
 .card-actions {

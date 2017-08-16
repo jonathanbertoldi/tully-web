@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as snackbarActions from '../../actions/snackbarActions';
+import { createAdmin } from '../../actions/adminActions';
+
 import { Link } from 'react-router';
 
 import { Card, CardHeader, CardText, CardActions, TextField, FlatButton } from 'material-ui';
@@ -12,8 +18,8 @@ class CreateAdminPage extends Component {
     const adminModel = {
       nome: '',
       email: '',
-      login: '',
-      senha: '',
+      userName: '',
+      password: '',
       confirmaSenha: '',
     };
 
@@ -45,7 +51,7 @@ class CreateAdminPage extends Component {
         errors[field] = `O campo ${field} é obrigatório`;
     });
 
-    if (admin.senha !== admin.confirmaSenha) 
+    if (admin.password !== admin.confirmaSenha)
       errors.confirmaSenha = 'A senha não confere com a que foi inserida anteriormente.'
 
     this.setState({ errors });
@@ -61,10 +67,15 @@ class CreateAdminPage extends Component {
   handleAdminSubmit = (e) => {
     e.preventDefault();
     const { admin } = this.state;
+    const { createAdmin, showSnackbar } = this.props.actions;
+    const { router } = this.props;
     if (this.validateAdmin(admin)) {
-      console.log('passou');
-    } else {
-      console.log('não passou');
+      createAdmin(admin)
+        .then(response => {
+          showSnackbar('Administrador criado com sucesso');
+          router.push('/admins');
+        })
+        .catch(error => showSnackbar(error[0].description));
     }
   }
 
@@ -93,14 +104,14 @@ class CreateAdminPage extends Component {
             <TextField
               className="input-control"
               floatingLabelText="Login"
-              name="login"
+              name="userName"
               errorText={errors.login}
               onChange={this.updateAdminState}
               fullWidth />
             <TextField
               className="input-control"
               floatingLabelText="Senha"
-              name="senha"
+              name="password"
               errorText={errors.senha}
               onChange={this.updateAdminState}
               type="password" />
@@ -122,4 +133,18 @@ class CreateAdminPage extends Component {
   }
 }
 
-export default CreateAdminPage;
+function mapStateToProps(state, ownProps) {
+  const { admins } = state;
+  return {
+    admins,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  const actions = { createAdmin, ...snackbarActions };
+  return {
+    actions: bindActionCreators(actions, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAdminPage);
