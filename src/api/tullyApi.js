@@ -1,7 +1,9 @@
-import apiGet from './apiGet';
-import apiPost from './apiPost';
+import get from './apiGet';
+import post from './apiPost';
+import patch from './apiPatch'
 
 export default {
-  get: apiGet,
-  post: apiPost,
+  get,
+  post,
+  patch,
 }

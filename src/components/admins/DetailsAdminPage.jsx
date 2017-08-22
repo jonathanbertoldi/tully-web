@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as adminActions from '../../actions/adminActions';
+import * as snackbarActions from '../../actions/snackbarActions';
 
 import {
   Card, CardHeader, CardText, IconButton,
@@ -10,7 +11,7 @@ import {
   IconMenu, MenuItem, TextField
 } from 'material-ui';
 
-import { grey600 } from 'material-ui/styles/colors';
+import { grey500 } from 'material-ui/styles/colors';
 
 import Person from 'material-ui/svg-icons/social/person';
 import Email from 'material-ui/svg-icons/communication/email';
@@ -21,7 +22,6 @@ import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import EditModal from './EditModal';
 
 class DetailsAdminPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +30,33 @@ class DetailsAdminPage extends Component {
       loginModalVisible: false,
       changePasswordModalVisible: false,
       disableAccountModalVisible: false,
+      admin: {
+        nome: '',
+        email: '',
+        userName: '',
+      },
+      errors: {
+        nome: '',
+        email: '',
+        userName: '',
+      },
     };
+  }
+
+  setError = (property, message) => {
+    const { errors } = this.state;
+    errors[property] = message;
+    this.setState({ errors });
+  }
+
+  clearErrors = () => {
+    this.setState({
+      errors: {
+        nome: '',
+        email: '',
+        userName: '',
+      },
+    });
   }
 
   componentDidMount() {
@@ -49,45 +75,89 @@ class DetailsAdminPage extends Component {
       touch={true}
       tooltip="Ações"
       tooltipPosition="bottom-left">
-      <MoreVertIcon color={grey600} />
+      <MoreVertIcon color={grey500} />
     </IconButton>
   );
 
-  renderIconMenu = () => (
-    <IconMenu
-      targetOrigin={{ vertical: "top", horizontal: "right" }}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      style={{ float: 'right' }}
-      iconButtonElement={this.iconButtonElement}>
-      <MenuItem onTouchTap={this.openChangePasswordModal}>
-        Alterar Senha
-      </MenuItem>
-      <MenuItem onTouchTap={this.openDisableAccountModal}>
-        Inativar Conta
-      </MenuItem>
-    </IconMenu>
-  )
+  renderIconMenu = () => {
+    const { identity, admin } = this.props;
+    const isLoggedAdmin = (identity && admin) && (identity.usuario.id === admin.id);
+
+    return (
+      <IconMenu
+        targetOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        style={{ float: 'right' }}
+        iconButtonElement={this.iconButtonElement}>
+        <MenuItem onTouchTap={this.openChangePasswordModal}>
+          Alterar Senha
+        </MenuItem>
+        {!isLoggedAdmin && <MenuItem onTouchTap={this.openDisableAccountModal}>
+            Inativar Conta
+        </MenuItem>}
+      </IconMenu>
+    );
+  }
 
   openNameModal = () => this.setState({ nameModalVisible: true });
-  closeNameModal = () => this.setState({ nameModalVisible: false });
+  closeNameModal = () => {
+    this.clearErrors();
+    this.setState({ nameModalVisible: false })
+  };
   handleEditNameSubmit = () => {
-    const { admin } = this.state;
-    console.log(admin);
-    this.closeNameModal();
+    const stateAdmin = this.state.admin;
+    const { setError, closeNameModal } = this;
+    const { updateAdmin, showSnackbar } = this.props.actions;
+    const { admin } = this.props;
+    if (stateAdmin.nome.length > 0) {
+      updateAdmin(admin, 'nome', stateAdmin.nome)
+        .then(response => {
+          showSnackbar('Administrador alterado com sucesso');
+        });
+
+      closeNameModal();
+    }
+    setError('nome', 'Insira um nome válido');
   }
 
   openEmailModal = () => this.setState({ emailModalVisible: true });
-  closeEmailModal = () => this.setState({ emailModalVisible: false });
+  closeEmailModal = () => {
+    this.clearErrors();
+    this.setState({ emailModalVisible: false })
+  };
   handleEditEmailSubmit = () => {
-    console.log('submeteu');
-    this.closeEmailModal();
+    const stateAdmin = this.state.admin;
+    const { updateAdmin, showSnackbar } = this.props.actions;
+    const { admin } = this.props;
+    if (stateAdmin.email.length > 0) {
+      updateAdmin(admin, 'email', stateAdmin.email)
+        .then(response => {
+          showSnackbar('Administrador alterado com sucesso');
+        });
+
+      this.closeEmailModal();
+    }
+    this.setError('email', 'Insira um email válido');
   }
 
   openLoginModal = () => this.setState({ loginModalVisible: true });
-  closeLoginModal = () => this.setState({ loginModalVisible: false });
+  closeLoginModal = () => {
+    this.clearErrors();
+    this.setState({ loginModalVisible: false })
+  };
   handleEditLoginSubmit = () => {
-    console.log('submeteu');
-    this.closeLoginModal();
+    const stateAdmin = this.state.admin;
+    const { updateAdmin, showSnackbar } = this.props.actions;
+    const { admin } = this.props;
+    if (stateAdmin.userName.length > 0) {
+      updateAdmin(admin, 'userName', stateAdmin.userName)
+        .then(response => {
+          showSnackbar('Administrador alterado com sucesso');
+        });
+
+      this.closeLoginModal();
+    }
+    this.setError('login', 'Insira um login válido');
   }
 
   openChangePasswordModal = () => this.setState({ changePasswordModalVisible: true });
@@ -119,7 +189,7 @@ class DetailsAdminPage extends Component {
     const { closeChangePasswordModal, handleChangePasswordSubmit } = this;
     const { closeDisableAccountModal, handleDisableAccountSubmit } = this;
     const { admin } = this.props;
-    const { nameModalVisible, emailModalVisible, loginModalVisible, changePasswordModalVisible, disableAccountModalVisible } = this.state;
+    const { nameModalVisible, emailModalVisible, loginModalVisible, changePasswordModalVisible, disableAccountModalVisible, errors } = this.state;
 
     return (
       <Card>
@@ -132,7 +202,7 @@ class DetailsAdminPage extends Component {
               <ListItem
                 leftAvatar={<Avatar icon={<Person />} />}
                 secondaryText="Nome"
-                rightIconButton={<IconButton onTouchTap={openNameModal}><Edit color={grey600} /></IconButton>}>
+                rightIconButton={<IconButton onTouchTap={openNameModal}><Edit color={grey500} /></IconButton>}>
                 {admin.nome}
               </ListItem>
               <Divider inset />
@@ -140,7 +210,7 @@ class DetailsAdminPage extends Component {
                 leftAvatar={<Avatar icon={<Email />} />}
                 secondaryText="E-Mail"
                 insetChildren
-                rightIconButton={<IconButton onTouchTap={openEmailModal}><Edit color={grey600} /></IconButton>}>
+                rightIconButton={<IconButton onTouchTap={openEmailModal}><Edit color={grey500} /></IconButton>}>
                 {admin.email}
               </ListItem>
               <Divider inset />
@@ -148,7 +218,7 @@ class DetailsAdminPage extends Component {
                 leftAvatar={<Avatar icon={<Lock />} />}
                 secondaryText="Login"
                 insetChildren
-                rightIconButton={<IconButton onTouchTap={openLoginModal}><Edit color={grey600} /></IconButton>}>
+                rightIconButton={<IconButton onTouchTap={openLoginModal}><Edit color={grey500} /></IconButton>}>
                 {admin.userName}
               </ListItem>
             </List>
@@ -163,6 +233,7 @@ class DetailsAdminPage extends Component {
           <TextField
             floatingLabelText="Novo nome"
             name="nome"
+            errorText={errors.nome}
             onChange={updateAdminState}
             fullWidth />
         </EditModal>
@@ -186,7 +257,7 @@ class DetailsAdminPage extends Component {
           width={460}>
           <TextField
             floatingLabelText="Novo login"
-            name="login"
+            name="userName"
             onChange={updateAdminState}
             fullWidth />
         </EditModal>
@@ -218,7 +289,7 @@ class DetailsAdminPage extends Component {
           handleSubmit={handleDisableAccountSubmit}
           title="Deseja desativar a sua conta?"
           width={460}>
-          <p>Após desativada, sua conta somente poderá ser reativada por outro usuário administrador</p>
+          <p>Após desativada, sua conta somente poderá ser reativada por outro usuário administrador.</p>
         </EditModal>
       </Card>
     );
@@ -226,15 +297,16 @@ class DetailsAdminPage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { admins } = state;
-  const admin = admins.find(a => a.id === parseInt(ownProps.routeParams.id, 10))
+  const { admins, identity } = state;
+  const admin = admins.find(a => a.id === parseInt(ownProps.routeParams.id, 10));
   return {
     admin,
+    identity,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...adminActions };
+  const actions = { ...adminActions, ...snackbarActions };
   return {
     actions: bindActionCreators(actions, dispatch),
   };

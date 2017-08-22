@@ -17,6 +17,13 @@ function createAdminSuccess(admin) {
   };
 }
 
+function updateAdminSuccess(admin) {
+  return {
+    type: types.UPDATE_ADMIN_SUCCESS,
+    admin,
+  };
+}
+
 export function loadAdmins() {
   return (dispatch, getState) => {
     dispatch(startApiRequest());
@@ -38,6 +45,23 @@ export function createAdmin(admin) {
     return tullyApi.post('admins', admin)
       .then(response => {
         dispatch(createAdminSuccess(response));
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        dispatch(apiRequestFailed());
+        return Promise.reject(error);
+      });
+  };
+}
+
+export function updateAdmin(body, property, value) {
+  return (dispatch, getState) => {
+    const admin = Object.assign({}, body, { [property]: value })
+
+    dispatch(startApiRequest());
+    return tullyApi.patch(`admins/${admin.id}`, property, value)
+      .then(response => {
+        dispatch(updateAdminSuccess(admin));
         return Promise.resolve(response);
       })
       .catch(error => {
