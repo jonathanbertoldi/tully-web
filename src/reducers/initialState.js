@@ -1,9 +1,8 @@
 export default {
   apiRequestsInProgress: 0,
   identity: {
-    isAuthenticated: false,
-    jwt: '',
-    expiration: '',
+    isAuthenticated: localStorage.getItem('jwt') ? true : false,
+    jwt: localStorage.getItem('jwt'),
     usuario: {},
   },
   snackbar: {

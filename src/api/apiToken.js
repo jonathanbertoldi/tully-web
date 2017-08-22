@@ -19,11 +19,11 @@ export function validateToken() {
             if (json.usuario.perfil === 'Admin') {
               return Promise.resolve(json);
             } else {
-              return Promise.reject(apiError('Usuário com permissões insuficientes para acessar este recurso', url));
+              return Promise.reject(apiError(403, 'Usuário com permissões insuficientes para acessar este recurso', url));
             }
           });
       }
-      return Promise.reject(apiError('Falha ao realizar autenticação no servidor', url));
+      return Promise.reject(apiError(401, 'Falha ao realizar autenticação no servidor', url));
     })
     .catch(error => {
       return Promise.reject(error);
@@ -49,11 +49,11 @@ export default (credentials) => {
             if (json.usuario.perfil === 'Admin') {
               return Promise.resolve(json);
             } else {
-              return Promise.reject(apiError('Usuário com permissões insuficientes para acessar este recurso', url));
+              return Promise.reject(apiError(403, 'Usuário com permissões insuficientes para acessar este recurso', url));
             }
           });
       }
-      return Promise.reject(apiError('Falha ao realizar autenticação no servidor', url));
+      return Promise.reject(apiError(401, 'Falha ao realizar autenticação no servidor', url));
     })
     .catch(error => {
       return Promise.reject(error);

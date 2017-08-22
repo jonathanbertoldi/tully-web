@@ -11,7 +11,8 @@ class PaginatedTable extends Component {
     super(props);
     this.state = {
       tablePage: 0,
-      tableOffset: 0
+      tableOffset: 0,
+      selected: [],
     }
   }
 
@@ -64,7 +65,7 @@ class PaginatedTable extends Component {
 
     var tableRows = pages[this.state.tablePage].items.map((item, index) => {
       return (
-        <TableRow key={index}>
+        <TableRow selected={this.isSelected(index)} key={index}>
           {tableContent.map((property, index) => (
             <TableRowColumn key={index}>
               {item[property.propertyName]}
@@ -85,12 +86,21 @@ class PaginatedTable extends Component {
 
   prevPage = () => this.setState({ tableOffset: this.state.tableOffset - this.props.limitPerTablePage, tablePage: this.state.tablePage - 1 })
 
+  isSelected = (index) => {
+    return this.state.selected.indexOf(index) !== -1;
+  }
+
   handleSelectTableRow = (index) => {
     if (index.length !== 0) {
+      this.setState({ selected: index });
+
       const { tableOffset } = this.state;
       const realIndex = parseInt(index, 10) + parseInt(tableOffset, 10);
 
       this.props.handleSelectedItem(this.props.listItems[realIndex]);
+    } else {
+      this.setState({ selected: [] });
+      this.props.handleSelectedItem(undefined);
     }
   }
 

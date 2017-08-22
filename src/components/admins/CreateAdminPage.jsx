@@ -80,6 +80,7 @@ class CreateAdminPage extends Component {
   }
 
   render() {
+    const { isFetching } = this.props;
     const { errors } = this.state;
 
     return (
@@ -125,7 +126,7 @@ class CreateAdminPage extends Component {
           </CardText>
           <CardActions className="card-actions">
             <FlatButton label="Cancelar" containerElement={<Link to="/admins" />} />
-            <FlatButton label="Salvar" onTouchTap={this.handleAdminSubmit} primary />
+            <FlatButton label="Salvar" disabled={isFetching} onTouchTap={this.handleAdminSubmit} primary />
           </CardActions>
         </Card>
       </div>
@@ -134,9 +135,10 @@ class CreateAdminPage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { admins } = state;
+  const { admins, apiRequestsInProgress } = state;
   return {
     admins,
+    isFetching: apiRequestsInProgress > 0 ? true : false,
   }
 }
 

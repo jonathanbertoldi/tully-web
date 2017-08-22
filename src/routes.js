@@ -8,6 +8,9 @@ import ChallengePage from './components/challenges/ChallengePage';
 
 import AdminPage from './components/admins/AdminPage';
 import CreateAdminPage from './components/admins/CreateAdminPage';
+import DetailsAdminPage from './components/admins/DetailsAdminPage';
+
+import NotFound from './components/not-found/NotFound';
 
 export default (
   <Route path="/" component={App}>
@@ -16,5 +19,7 @@ export default (
     <Route path="desafios" component={ChallengePage} />
     <Route path="admins" component={AdminPage} />
     <Route path="admins/novo" component={CreateAdminPage} />
+    <Route path="admins/:id" component={DetailsAdminPage} />
+    <Route path="404" component={NotFound} />
   </Route>
 );

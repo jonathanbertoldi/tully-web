@@ -5,8 +5,9 @@ import { bindActionCreators } from 'redux';
 
 import * as adminActions from '../../actions/adminActions';
 import { showSnackbar } from '../../actions/snackbarActions';
+import { requestLogout } from '../../actions/loginActions';
 
-import { Card, CardHeader, FloatingActionButton } from 'material-ui';
+import { Card, CardHeader, FloatingActionButton, FlatButton } from 'material-ui';
 import Add from 'material-ui/svg-icons/content/add';
 
 import PaginatedTable from '../../utils/paginated-table/PaginatedTable';
@@ -14,19 +15,33 @@ import PaginatedTable from '../../utils/paginated-table/PaginatedTable';
 import './admin.css';
 
 class AdminPage extends Component {
-  componentDidMount() {
-    const { loadAdmins, showSnackbar } = this.props.actions;
+  constructor(props) {
+    super(props);
+    this.state = {
+      admin: undefined,
+    };
+  }
 
-    loadAdmins().catch(error => showSnackbar());
+  componentDidMount() {
+    const { loadAdmins } = this.props.actions;
+
+    loadAdmins();
   }
 
   handleSelectedItem = (item) => {
-    const selectedAdmin = item;
-    console.log(selectedAdmin);
+    const admin = item;
+    this.setState({ admin });
+  }
+
+  handleDetailsClick = () => {
+    const { router } = this.props;
+    const { id } = this.state.admin;
+    router.push(`admins/${id}`);
   }
 
   render() {
     const { admins } = this.props;
+    const adminSelected = this.state.admin === undefined;
 
     const tableContent = [{
       propertyName: 'nome',
@@ -42,7 +57,12 @@ class AdminPage extends Component {
     return (
       <div>
         <Card>
-          <CardHeader title="Consulta" subtitle="Administradores" />
+          <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} title="Consulta" subtitle="Administradores">
+            <FlatButton
+              disabled={adminSelected}
+              label="Detalhes"
+              onTouchTap={this.handleDetailsClick} />
+          </CardHeader>
           <PaginatedTable noItemsMessage="Não existem registros"
             tableContent={tableContent}
             listItems={admins}
@@ -67,7 +87,7 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...adminActions, showSnackbar };
+  const actions = { ...adminActions, requestLogout, showSnackbar };
 
   return {
     actions: bindActionCreators(actions, dispatch),
