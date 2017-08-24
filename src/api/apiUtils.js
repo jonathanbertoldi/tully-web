@@ -1,4 +1,7 @@
-export const apiUrl = "http://localhost:8080/api/";
+const developmentUrl = 'http://localhost:8080/api/';
+const productionUrl = 'https://tully-api.herokuapp.com/api/';
+
+export const apiUrl = APP_ENV == 'Production' ? productionUrl : developmentUrl;
 
 export function apiError(statusCode, message, url) {
   return {
