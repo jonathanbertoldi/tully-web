@@ -24,6 +24,13 @@ function updateAdminSuccess(admin) {
   };
 }
 
+function removeAdminSuccess(adminId) {
+  return {
+    type: types.REMOVE_ADMIN_SUCCESS,
+    adminId,
+  };
+}
+
 export function loadAdmins() {
   return (dispatch, getState) => {
     dispatch(startApiRequest());
@@ -62,6 +69,20 @@ export function updateAdmin(body, property, value) {
     return tullyApi.patch(`admins/${admin.id}`, property, value)
       .then(response => {
         dispatch(updateAdminSuccess(admin));
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        dispatch(apiRequestFailed());
+        return Promise.reject(error);
+      });
+  };
+}
+
+export function removeAdmin(adminId) {
+  return (dispatch, getState) => {
+    return tullyApi.remove(`admins/${adminId}`)
+      .then(response => {
+        dispatch(removeAdminSuccess(adminId));
         return Promise.resolve(response);
       })
       .catch(error => {

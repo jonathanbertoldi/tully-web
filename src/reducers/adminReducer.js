@@ -10,11 +10,15 @@ export default function adminReducer(state = initialState.admins, action) {
       return [
         ...state,
         Object.assign({}, action.admin),
-      ];
+      ].sort((a, b) => a.id - b.id);
     case types.UPDATE_ADMIN_SUCCESS:
       return [
         ...state.filter(admin => admin.id !== action.admin.id),
         Object.assign({}, action.admin),
+      ].sort((a, b) => a.id - b.id);
+    case types.REMOVE_ADMIN_SUCCESS:
+      return [
+        ...state.filter(admin => admin.id !== action.adminId),
       ].sort((a, b) => a.id - b.id);
     default:
       return state;

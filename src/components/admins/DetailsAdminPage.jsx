@@ -89,11 +89,11 @@ class DetailsAdminPage extends Component {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         style={{ float: 'right' }}
         iconButtonElement={this.iconButtonElement}>
-        <MenuItem onTouchTap={this.openChangePasswordModal}>
+        {isLoggedAdmin && <MenuItem onTouchTap={this.openChangePasswordModal}>
           Alterar Senha
-        </MenuItem>
+        </MenuItem>}
         {!isLoggedAdmin && <MenuItem onTouchTap={this.openDisableAccountModal}>
-            Inativar Conta
+          Inativar Conta
         </MenuItem>}
       </IconMenu>
     );
@@ -170,8 +170,17 @@ class DetailsAdminPage extends Component {
   openDisableAccountModal = () => this.setState({ disableAccountModalVisible: true });
   closeDisableAccountModal = () => this.setState({ disableAccountModalVisible: false });
   handleDisableAccountSubmit = () => {
-    console.log('submeteu');
+    const { admin, router } = this.props;
+    const { removeAdmin, showSnackbar } = this.props.actions;
+
+    removeAdmin(admin.id)
+      .then(response => {
+        showSnackbar('Administrador removido com sucesso');
+      });
+
     this.closeDisableAccountModal();
+
+    router.push('/admins');
   }
 
   updateAdminState = (e) => {
@@ -289,7 +298,7 @@ class DetailsAdminPage extends Component {
           handleSubmit={handleDisableAccountSubmit}
           title="Deseja desativar a sua conta?"
           width={460}>
-          <p>Após desativada, sua conta somente poderá ser reativada por outro usuário administrador.</p>
+          <p>Após desativada, sua conta deixará de ter acesso ao sistema.</p>
         </EditModal>
       </Card>
     );
