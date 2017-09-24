@@ -46,7 +46,7 @@ export default (credentials) => {
       if (response.ok) {
         return response.json()
           .then(json => {
-            if (json.usuario.perfil === 'Admin') {
+            if (json.perfil === 'Admin') {
               return Promise.resolve(json);
             } else {
               return Promise.reject(apiError(403, 'Usuário com permissões insuficientes para acessar este recurso', url));

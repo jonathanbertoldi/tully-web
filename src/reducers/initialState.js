@@ -10,4 +10,5 @@ export default {
     message: '',
   },
   admins: [],
+  venues: [],
 }

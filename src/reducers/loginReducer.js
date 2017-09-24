@@ -19,7 +19,12 @@ export default function loginReducer(state = initialState.identity, action) {
       });
     case types.REQUEST_LOGOUT:
       localStorage.removeItem('jwt');
-      return initialState.identity;
+      return {
+        isAuthenticated: false,
+        jwt: '',
+        expiration: '',
+        usuario: {},
+      };
     default:
       return state;
   }

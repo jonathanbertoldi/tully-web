@@ -31,7 +31,7 @@ class App extends Component {
           <RefreshIndicator style={{ marginLeft: '50%' }}
             size={40}
             left={-20}
-            top={114}
+            top={107}
             status={refresh} />
         </div>
       </MuiThemeProvider>

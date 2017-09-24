@@ -12,8 +12,6 @@ import Add from 'material-ui/svg-icons/content/add';
 
 import PaginatedTable from '../../utils/paginated-table/PaginatedTable';
 
-import './admin.css';
-
 class AdminPage extends Component {
   constructor(props) {
     super(props);
