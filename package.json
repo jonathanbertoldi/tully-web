@@ -8,6 +8,7 @@
   "dependencies": {
     "material-ui": "^0.18.7",
     "prop-types": "^15.5.10",
+    "rc-form": "^1.4.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-google-maps": "^7.1.0",

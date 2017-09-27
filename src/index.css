@@ -40,6 +40,7 @@ h1, h2, h3, h4, h5, h6 {
 .form-group .input-control {
   flex: 1 1 auto;
   display: block;
+  min-width: 100px;
   margin: 0 8px;
 }
 

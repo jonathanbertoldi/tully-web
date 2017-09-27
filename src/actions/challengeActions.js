@@ -1,28 +1,27 @@
-import fourSquareApi from '../api/fourSquare/fourSquareApi';
-
-import { startApiRequest, apiRequestFailed } from './apiRequestActions';
 import * as types from './actionTypes';
+import { startApiRequest, apiRequestFailed } from './apiRequestActions';
+import tullyApi from '../api/tullyApi';
 
-function loadVenuesSuccess(venues) {
+function loadChallengesSuccess(challenges) {
   return {
-    type: types.LOAD_VENUES_SUCCESS,
-    venues,
+    type: types.LOAD_CHALLENGES_SUCCESS,
+    challenges,
   };
 }
 
-function loadVenueSuccess(venue) {
+function createChallengeSuccess(challenge) {
   return {
-    type: types.LOAD_VENUE_SUCCESS,
-    venue,
+    type: types.CREATE_CHALLENGE_SUCCESS,
+    challenge,
   };
 }
 
-export function loadVenues(lat, lng) {
+export function loadChallenges() {
   return (dispatch, getState) => {
     dispatch(startApiRequest());
-    return fourSquareApi.getVenues(lat, lng)
+    return tullyApi.get('desafios')
       .then(response => {
-        dispatch(loadVenuesSuccess(response));
+        dispatch(loadChallengesSuccess(response));
         return Promise.resolve(response);
       })
       .catch(error => {
@@ -32,12 +31,12 @@ export function loadVenues(lat, lng) {
   };
 }
 
-export function loadVenue(venueId) {
+export function createChallenge(challenge) {
   return (dispatch, getState) => {
     dispatch(startApiRequest());
-    return fourSquareApi.getVenue(venueId)
+    return tullyApi.post('desafios', challenge)
       .then(response => {
-        dispatch(loadVenueSuccess(response));
+        dispatch(createChallengeSuccess(response));
         return Promise.resolve(response);
       })
       .catch(error => {

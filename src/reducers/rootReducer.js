@@ -5,6 +5,7 @@ import snackbar from './snackbarReducer';
 
 import admins from './adminReducer';
 import venues from './venuesReducer';
+import challenges from './challengeReducer';
 
 const rootReducer = combineReducers({
   apiRequestsInProgress,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   snackbar,
   admins,
   venues,
+  challenges,
 });
 
 export default rootReducer;

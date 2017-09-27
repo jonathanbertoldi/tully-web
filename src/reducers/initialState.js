@@ -10,5 +10,12 @@ export default {
     message: '',
   },
   admins: [],
-  venues: [],
+  venues: {
+    list: [],
+    selected: {},
+  },
+  challenges: {
+    list: [],
+    selected: {},
+  }
 }

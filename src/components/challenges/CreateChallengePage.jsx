@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router';
 import _ from 'lodash';
+import { createForm } from 'rc-form';
 
 import * as venuesActions from '../../actions/venuesActions';
+import * as challengeActions from '../../actions/challengeActions';
+import * as snackbarActions from '../../actions/snackbarActions';
 
-import { Card, CardHeader, CardText } from 'material-ui/Card';
-import { TextField, IconButton } from 'material-ui';
+import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
+import { TextField, IconButton, FlatButton } from 'material-ui';
 import Search from 'material-ui/svg-icons/action/search';
 
 import TullyMap from './TullyMap';
@@ -51,22 +55,42 @@ class CreateChallengePage extends Component {
     loadVenues(lat, lng);
   }
 
-  handleMarkerClick = (e) => {
-    console.log(e);
+  handleMarkerClick = (marker) => this.props.actions.loadVenue(marker.key);
+
+  handleChallengeSubmit = (e) => {
+    e.preventDefault();
+    const { form, router } = this.props;
+    const { createChallenge, showSnackbar } = this.props.actions;
+
+    form.validateFields((err, values) => {
+      if (err) return;
+
+      console.log(values);
+
+      createChallenge(values)
+        .then(response => {
+          showSnackbar('Desafio cadastrado com sucesso');
+          router.push('/desafios');
+        })
+        .catch(error => showSnackbar(error[0].description));
+    });
   }
 
   render() {
     const { position, zoom } = this.state;
-    const { venues } = this.props;
+    const { venues, isFetching } = this.props;
+    const { getFieldDecorator, getFieldError } = this.props.form;
 
-    const markers = venues.map(venue => {
+    const markers = venues.list.map(venue => {
+      const { location, id } = venue;
+
       return {
         position: {
-          lat: venue.location.lat,
-          lng: venue.location.lng,
+          lat: location.lat,
+          lng: location.lng,
         },
         defaultAnimation: 2,
-        key: venue.id,
+        key: id,
       };
     });
 
@@ -87,25 +111,124 @@ class CreateChallengePage extends Component {
             onMapClick={this.handleMapClick}
             onMarkerClick={this.handleMarkerClick}
           />
-          <CardText className="form-group" style={{ paddingTop: 0 }}>
-            <TextField className="input-control"
-              onChange={this.handleLatLngChange}
-              value={position.lat}
-              name="lat"
-              floatingLabelText="Latitude"
-            />
-            <TextField className="input-control"
-              onChange={this.handleLatLngChange}
-              value={position.lng}
-              name="lng"
-              floatingLabelText="Longitude"
-            />
-            <IconButton
-              style={{ marginTop: 28 }}
-              onTouchTap={this.handleSearchClick}
-            >
-              <Search />
-            </IconButton>
+          <CardText style={{ padding: '0 16px' }}>
+            <div className="form-group">
+              <TextField className="input-control"
+                onChange={this.handleLatLngChange}
+                value={position.lat}
+                name="lat"
+                floatingLabelText="Latitude"
+              />
+              <TextField className="input-control"
+                onChange={this.handleLatLngChange}
+                value={position.lng}
+                name="lng"
+                floatingLabelText="Longitude"
+              />
+              <IconButton
+                style={{ marginTop: 28 }}
+                onTouchTap={this.handleSearchClick}
+              >
+                <Search />
+              </IconButton>
+            </div>
+            <form onSubmit={this.handleChallengeSubmit}>
+              {getFieldDecorator('latitude')}
+              {getFieldDecorator('longitude')}
+              {getFieldDecorator('foto')}
+              {getFieldDecorator('nome', {
+                rules: [{ required: true, message: 'Favor preencher o campo' }]
+              })(
+                <TextField
+                  name="nome"
+                  fullWidth
+                  className="input-control"
+                  floatingLabelText="Nome"
+                  errorText={getFieldError('nome')} />
+                )}
+              {getFieldDecorator('endereco', {
+                initialValue: '',
+                rules: [{ required: true, message: 'Favor preencher o campo' }]
+              })(
+                <TextField
+                  name="endereco"
+                  fullWidth
+                  className="input-control"
+                  floatingLabelText="Endereço"
+                  errorText={getFieldError('endereco')} />
+                )}
+              <div className="form-group">
+                {getFieldDecorator('cidade', {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Favor preencher o campo' }]
+                })(
+                  <TextField
+                    name="cidade"
+                    className="input-control"
+                    floatingLabelText="Cidade"
+                    errorText={getFieldError('cidade')} />
+                  )}
+                {getFieldDecorator('estado', {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Favor preencher o campo' }]
+                })(
+                  <TextField
+                    name="estado"
+                    className="input-control"
+                    floatingLabelText="Estado"
+                    errorText={getFieldError('estado')} />
+                  )}
+                {getFieldDecorator('pais', {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Favor preencher o campo' }]
+                })(
+                  <TextField
+                    name="pais"
+                    className="input-control"
+                    floatingLabelText="País"
+                    errorText={getFieldError('pais')} />
+                  )}
+              </div>
+              <div className="form-group">
+                {getFieldDecorator('telefone', {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Favor preencher o campo' }]
+                })(
+                  <TextField
+                    name="telefone"
+                    className="input-control"
+                    floatingLabelText="Telefone"
+                    errorText={getFieldError('telefone')} />
+                  )}
+                {getFieldDecorator('url', {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Favor preencher o campo' }]
+                })(
+                  <TextField
+                    name="url"
+                    className="input-control"
+                    floatingLabelText="URL"
+                    errorText={getFieldError('url')} />
+                  )}
+              </div>
+              {getFieldDecorator('descricao', {
+                initialValue: '',
+                rules: [{ required: true, message: 'Favor preencher o campo' }]
+              })(
+                <TextField
+                  multiLine
+                  rows={1}
+                  fullWidth
+                  name="descricao"
+                  className="input-control"
+                  floatingLabelText="Descrição"
+                  errorText={getFieldError('descricao')} />
+                )}
+              <CardActions className="card-actions">
+                <FlatButton label="Cancelar" containerElement={<Link to="/desafios" />} />
+                <FlatButton type="submit" label="Salvar" disabled={isFetching} primary />
+              </CardActions>
+            </form>
           </CardText>
         </Card>
       </div>
@@ -114,19 +237,40 @@ class CreateChallengePage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { venues } = state;
+  const { venues, apiRequestsInProgress } = state;
 
   return {
     venues,
+    isFetching: apiRequestsInProgress > 0 ? true : false,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = { ...venuesActions };
+  const actions = { ...venuesActions, ...challengeActions, ...snackbarActions };
 
   return {
     actions: bindActionCreators(actions, dispatch),
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateChallengePage);
+function mapPropsToFields(props) {
+  const { selected } = props.venues;
+
+  return {
+    nome: { value: selected.nome },
+    endereco: { value: selected.endereco },
+    cidade: { value: selected.cidade },
+    estado: { value: selected.estado },
+    pais: { value: selected.pais },
+    latitude: { value: selected.latitude },
+    longitude: { value: selected.longitude },
+    descricao: { value: selected.descricao ? selected.descricao : '' },
+    telefone: { value: selected.telefone ? selected.telefone : '' },
+    url: { value: selected.url ? selected.url : '' },
+    foto: { value: selected.foto ? selected.foto : '' },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  createForm({ mapPropsToFields })(CreateChallengePage)
+);

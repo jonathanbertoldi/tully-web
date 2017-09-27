@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 
 class TullyMap extends Component {
+  handleMarkerClick = (marker, onMarkerClick) => onMarkerClick(marker);
+  
   render() {
     // map events
     const { onMapLoad, onMapClick, onMarkerClick } = this.props;
@@ -13,13 +15,13 @@ class TullyMap extends Component {
 
     return (
       <GoogleMap ref={onMapLoad}
-        defaultZoom={zoom}
-        defaultCenter={center}
+        zoom={zoom}
+        center={center}
         onClick={onMapClick}>
         {markers.map(marker => (
           <Marker
             {...marker}
-            onClick={onMarkerClick}
+            onClick={() => this.handleMarkerClick(marker, onMarkerClick)}
           />
         ))}
       </GoogleMap>

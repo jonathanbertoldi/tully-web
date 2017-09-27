@@ -1,9 +1,9 @@
-import { clientId, clientSecret, fourSquareUrl } from './fourSquareApi';
+import { clientId, clientSecret, apiVersion, fourSquareUrl } from './fourSquareApi';
 
 export default (lat, lng) => {
   const latLng = `?ll=${lat},${lng}`;
 
-  const url = `${fourSquareUrl}${latLng}&client_id=${clientId}&client_secret=${clientSecret}&v=20170831`;
+  const url = `${fourSquareUrl}explore/${latLng}&${clientId}&${clientSecret}&${apiVersion}`;
 
   return fetch(url)
     .then(response => response.json())
