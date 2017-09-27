@@ -65,8 +65,6 @@ class CreateChallengePage extends Component {
     form.validateFields((err, values) => {
       if (err) return;
 
-      console.log(values);
-
       createChallenge(values)
         .then(response => {
           showSnackbar('Desafio cadastrado com sucesso');

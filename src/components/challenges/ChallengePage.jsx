@@ -26,6 +26,12 @@ class ChallengePage extends Component {
     this.setState({ challenge });
   }
 
+  handleDetailsClick = () => {
+    const { router } = this.props;
+    const { id } = this.state.challenge;
+    router.push(`desafios/${id}`);
+  }
+
   render() {
     const { challenges } = this.props;
     const challengeSelected = this.state.challenge === undefined;

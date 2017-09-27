@@ -11,6 +11,10 @@ function challengesReducer(state = initialState.challenges.list, action) {
         ...state,
         Object.assign({}, action.challenge),
       ];
+    case types.REMOVE_CHALLENGE_SUCCESS:
+      return [
+        ...state.filter(challenge => challenge.id !== action.challengeId),
+      ];
     default:
       return state;
   }
