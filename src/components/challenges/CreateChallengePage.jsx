@@ -115,18 +115,15 @@ class CreateChallengePage extends Component {
                 onChange={this.handleLatLngChange}
                 value={position.lat}
                 name="lat"
-                floatingLabelText="Latitude"
-              />
+                floatingLabelText="Latitude" />
               <TextField className="input-control"
                 onChange={this.handleLatLngChange}
                 value={position.lng}
                 name="lng"
-                floatingLabelText="Longitude"
-              />
+                floatingLabelText="Longitude" />
               <IconButton
                 style={{ marginTop: 28 }}
-                onTouchTap={this.handleSearchClick}
-              >
+                onTouchTap={this.handleSearchClick} >
                 <Search />
               </IconButton>
             </div>
