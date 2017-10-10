@@ -54,3 +54,7 @@ form .card-actions {
   justify-content: flex-end;
   margin-right: -16px;
 }
+
+form .photo-button {
+  padding: 16 0;
+}

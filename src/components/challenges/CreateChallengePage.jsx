@@ -11,7 +11,10 @@ import * as snackbarActions from '../../actions/snackbarActions';
 
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
 import { TextField, IconButton, FlatButton } from 'material-ui';
-import Search from 'material-ui/svg-icons/action/search';
+
+import { grey600 } from 'material-ui/styles/colors';
+import SearchIcon from 'material-ui/svg-icons/action/search';
+import CameraIcon from 'material-ui/svg-icons/image/photo-camera';
 
 import TullyMap from './TullyMap';
 
@@ -124,7 +127,7 @@ class CreateChallengePage extends Component {
               <IconButton
                 style={{ marginTop: 28 }}
                 onTouchTap={this.handleSearchClick} >
-                <Search />
+                <SearchIcon color={grey600} />
               </IconButton>
             </div>
             <form onSubmit={this.handleChallengeSubmit}>
@@ -219,6 +222,10 @@ class CreateChallengePage extends Component {
                   floatingLabelText="Descrição"
                   errorText={getFieldError('descricao')} />
                 )}
+              <FlatButton
+                fullWidth
+                icon={<CameraIcon color={grey600} />}
+                label="Foto" />
               <CardActions className="card-actions">
                 <FlatButton label="Cancelar" containerElement={<Link to="/desafios" />} />
                 <FlatButton type="submit" label="Salvar" disabled={isFetching} primary />

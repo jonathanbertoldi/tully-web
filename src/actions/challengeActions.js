@@ -75,6 +75,14 @@ export function createChallenge(challenge) {
   };
 }
 
+export function updateChallenge(challengeId, body) {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    console.log(state);
+  }
+}
+
 export function removeChallenge(challengeId) {
   return (dispatch, getState) => {
     return tullyApi.remove(`desafios/${challengeId}`)
